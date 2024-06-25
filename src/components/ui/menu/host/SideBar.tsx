@@ -11,23 +11,27 @@ import { IoIosPeople } from "react-icons/io";
 import { setupApiClient } from "@/services/api";
 
 // React
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { fetchData } from "next-auth/client/_utils";
+import { api } from "@/services/apiClient";
 
 export default function SideBar() {
-    // const api = setupApiClient();
+    const [data, setData] = useState(null)
 
-    // useEffect(() => {
-    //     const fetchDepartments = async () => {
-    //         try {
-    //             const response = await api.get('/departments');
-    //             console.log("Dados: ", response.data)
-    //         } catch (error) {
-    //             console.error("Error fetching departments:", error);
-    //         }
-    //     };
+    useEffect(() => {
+        const fetchDataAsync = async () => {
+            try {
+               const resp = await api.get('/departments');
+               setData(resp.data)
+            } catch (err) {
+                console.error(err);
+            }
+        };
 
-    //     fetchDepartments();
-    // }, []);
+        fetchDataAsync();
+    }, []);
+
+    console.log("Dados: ", data)
 
     return (
         <div className="h-screen overflow-y-auto  border-l border-r sm:w-96 w-60 dark:border-r-gray-300">

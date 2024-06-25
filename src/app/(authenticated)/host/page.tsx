@@ -63,8 +63,6 @@ export default async function HostPage() {
                         <TableMain />
                     </div>
                 </div>
-                {/* <div></div> */}
-
             </div>
         </>
     )

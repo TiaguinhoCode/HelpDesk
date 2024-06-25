@@ -23,7 +23,7 @@ type SideBarProps = {
     user: ItemsUser
 }
 
-export default async function HeaderBar({ user }: SideBarProps) {
+export default function HeaderBar({ user }: SideBarProps) {
     const router = useRouter()
 
     async function logout() {
