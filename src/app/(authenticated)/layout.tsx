@@ -36,7 +36,7 @@ export default async function PrivateLayout({ children }: PrivateLayoutProps) {
   return (
     <>
      
-      <div className="w-full flex">
+      <div className="w-full flex bg-gray-100">
          <SideBar user={session} />
         {children}
       </div>
