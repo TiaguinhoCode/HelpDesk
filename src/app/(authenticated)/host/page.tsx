@@ -18,6 +18,9 @@ import { Session } from "inspector";
 // Utils
 import fetchData from "@/app/utils/fetchData";
 
+// Dados
+import { columns } from "@/data/TableColumns/ColummnsHost";
+
 // Tipagem
 interface sessionType extends Session {
     name: string;
@@ -32,8 +35,6 @@ export default async function HostPage() {
 
     const sector = await fetchData('/departments')
     const host = await fetchData('/host')
-
-    console.log("Hosts: ", host?.data.hosts)
 
     return (
         <>
@@ -51,7 +52,7 @@ export default async function HostPage() {
                         />
                         <div className="flex">
                             <Button color="primary" size="sm" radius="md" className="p-2 mr-2" startContent={<FiPlus className="text-white text-lg" />}>Add Computador</Button>
-                            <DropDownTable />
+                            <DropDownTable data={columns} />
                         </div>
                     </div>
                     <div className="flex justify-between items-center px-4">
@@ -69,7 +70,7 @@ export default async function HostPage() {
                         </label>
                     </div>
                     <div className="px-3">
-                        <TableMain data={host?.data.hosts}/>
+                        <TableMain data={host?.data.hosts} collumn={columns} />
                     </div>
                 </div>
             </div>

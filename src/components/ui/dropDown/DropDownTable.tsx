@@ -5,7 +5,17 @@ import { Button } from "@nextui-org/button";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/dropdown";
 import { FaChevronDown } from "react-icons/fa";
 
-export function DropDownTable() {
+// Tipagem
+type ItemCollumns = {
+    name: string;
+    uid: string
+}
+
+interface TableProps {
+    data: ItemCollumns[]
+}
+
+export function DropDownTable({ data }: TableProps) {
     return (
         <Dropdown>
             <DropdownTrigger className="hidden sm:flex">
@@ -13,14 +23,18 @@ export function DropDownTable() {
                     Colunas
                 </Button>
             </DropdownTrigger>
-            <DropdownMenu
-                disallowEmptySelection
-                aria-label="Table Columns"
-                closeOnSelect={false}
-                selectionMode="multiple"
-            >
-                <DropdownItem key="1" className="capitalize">ID</DropdownItem>
-            </DropdownMenu>
+            {data.map((columns) => (
+                <DropdownMenu
+                    disallowEmptySelection
+                    aria-label="Table Columns"
+                    closeOnSelect={false}
+                    selectionMode="multiple"
+                >
+                    <DropdownItem key={columns.uid} className="capitalize">{columns.name}</DropdownItem>
+                </DropdownMenu>
+            ))
+
+            }
         </Dropdown>
     )
 }
