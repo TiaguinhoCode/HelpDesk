@@ -8,30 +8,10 @@ import { FiPlus } from "react-icons/fi";
 import { IoIosPeople } from "react-icons/io";
 
 // Api
-import { setupApiClient } from "@/services/api";
-
-// React
-import { useEffect, useState } from "react";
-import { fetchData } from "next-auth/client/_utils";
 import { api } from "@/services/apiClient";
 
+// React
 export default function SideBar() {
-    const [data, setData] = useState(null)
-
-    useEffect(() => {
-        const fetchDataAsync = async () => {
-            try {
-               const resp = await api.get('/departments');
-               setData(resp.data)
-            } catch (err) {
-                console.error(err);
-            }
-        };
-
-        fetchDataAsync();
-    }, []);
-
-    console.log("Dados: ", data)
 
     return (
         <div className="h-screen overflow-y-auto  border-l border-r sm:w-96 w-60 dark:border-r-gray-300">

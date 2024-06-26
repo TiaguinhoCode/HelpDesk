@@ -14,6 +14,9 @@ import { FiPlus } from "react-icons/fi";
 import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Session } from "inspector";
+import { setupApiClient } from "@/services/api";
+
+// Api
 
 // Tipagem
 interface sessionType extends Session {
@@ -25,6 +28,11 @@ interface sessionType extends Session {
 
 export default async function HostPage() {
     const session = await getServerSession(nextAuthOptions) as sessionType
+
+    const api = setupApiClient()
+    const resp = await api.get('/departments')
+    const data = resp.data
+    console.log(data)
 
     return (
         <>
