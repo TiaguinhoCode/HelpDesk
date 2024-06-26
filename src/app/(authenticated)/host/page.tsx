@@ -15,20 +15,29 @@ import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Session } from "inspector";
 
+// Utils
+import fetchData from "@/app/utils/fetchData";
+
 // Tipagem
 interface sessionType extends Session {
     name: string;
     email: string;
     department: { id: string, sector: string };
+    token: string
     photo: string
 }
 
 export default async function HostPage() {
     const session = await getServerSession(nextAuthOptions) as sessionType
 
+    const sector = await fetchData('/departments')
+    const host = await fetchData('/host')
+
+    console.log("Hosts: ", host?.data.hosts)
+
     return (
         <>
-            <SideBar />
+            <SideBar sector={sector?.data.departments} />
             <div className="w-full">
                 <HeaderBar user={session} />
                 <div className="flex flex-col gap-4">
@@ -60,7 +69,7 @@ export default async function HostPage() {
                         </label>
                     </div>
                     <div className="px-3">
-                        <TableMain />
+                        <TableMain data={host?.data.hosts}/>
                     </div>
                 </div>
             </div>

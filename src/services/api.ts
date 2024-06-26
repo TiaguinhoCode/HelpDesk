@@ -2,12 +2,18 @@
 import axios from "axios";
 
 // Servidor
-import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Session } from "inspector";
 
 // Tipagem
-import { CustomSession } from "@/types/session-auth";
-
+interface sessionType extends Session {
+    name: string;
+    email: string;
+    department: { id: string, sector: string };
+    token: string
+    photo: string
+}
 
 export const setupApiClient = () => {
     const instance = axios.create({
@@ -18,7 +24,7 @@ export const setupApiClient = () => {
     })
 
     instance.interceptors.request.use(async (config) => {
-        const session = await getSession() as CustomSession;
+        const session = await getServerSession(nextAuthOptions) as sessionType
 
         if (session) {
             config.headers.Authorization = `Bearer ${session.token}`;

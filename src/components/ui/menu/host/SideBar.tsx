@@ -7,31 +7,21 @@ import { FaComputer } from "react-icons/fa6";
 import { FiPlus } from "react-icons/fi";
 import { IoIosPeople } from "react-icons/io";
 
-// Api
-import { setupApiClient } from "@/services/api";
-
 // React
 import { useEffect, useState } from "react";
-import { fetchData } from "next-auth/client/_utils";
 import { api } from "@/services/apiClient";
 
-export default function SideBar() {
-    const [data, setData] = useState(null)
+// Tipagem
+type ItemsDepartments = {
+    id: string;
+    sector: string;
+};
 
-    useEffect(() => {
-        const fetchDataAsync = async () => {
-            try {
-               const resp = await api.get('/departments');
-               setData(resp.data)
-            } catch (err) {
-                console.error(err);
-            }
-        };
+interface SideBarProps {
+    sector: ItemsDepartments[];
+}
 
-        fetchDataAsync();
-    }, []);
-
-    console.log("Dados: ", data)
+export default function SideBar({ sector }: SideBarProps) {
 
     return (
         <div className="h-screen overflow-y-auto  border-l border-r sm:w-96 w-60 dark:border-r-gray-300">
@@ -51,36 +41,14 @@ export default function SideBar() {
                         </ListboxItem>
                     </ListboxSection>
                     <ListboxSection title="Setores: " showDivider>
-                        <ListboxItem
-                            key="RH"
-                            endContent={<IoIosPeople />}
-                        >
-                            RH
-                        </ListboxItem>
-                        <ListboxItem
-                            key="T.I"
-                            endContent={<IoIosPeople />}
-                        >
-                            T.I
-                        </ListboxItem>
-                        <ListboxItem
-                            key="Adm"
-                            endContent={<IoIosPeople />}
-                        >
-                            Admin
-                        </ListboxItem>
-                        <ListboxItem
-                            key="Fiscal"
-                            endContent={<IoIosPeople />}
-                        >
-                            Fiscal
-                        </ListboxItem>
-                        <ListboxItem
-                            key="marketing"
-                            endContent={<IoIosPeople />}
-                        >
-                            Marketing
-                        </ListboxItem>
+                        {sector.map((sectorItem) => (
+                            <ListboxItem
+                                key={sectorItem.id} 
+                                endContent={<IoIosPeople />}
+                            >
+                                {sectorItem.sector}
+                            </ListboxItem>
+                        ))}
                     </ListboxSection>
                 </Listbox>
             </div>
