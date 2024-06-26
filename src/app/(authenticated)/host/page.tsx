@@ -18,25 +18,30 @@ import { setupApiClient } from "@/services/api";
 
 // Api
 
+// Utils
+import fetchData from "@/app/utils/fetchData";
+
+// Dados
+import { columns } from "@/data/TableColumns/ColummnsHost";
+
 // Tipagem
 interface sessionType extends Session {
     name: string;
     email: string;
     department: { id: string, sector: string };
+    token: string
     photo: string
 }
 
 export default async function HostPage() {
     const session = await getServerSession(nextAuthOptions) as sessionType
 
-    const api = setupApiClient()
-    const resp = await api.get('/departments')
-    const data = resp.data
-    console.log(data)
+    const sector = await fetchData('/departments')
+    const host = await fetchData('/host')
 
     return (
         <>
-            <SideBar />
+            <SideBar sector={sector?.data.departments} />
             <div className="w-full">
                 <HeaderBar user={session} />
                 <div className="flex flex-col gap-4">
@@ -50,7 +55,7 @@ export default async function HostPage() {
                         />
                         <div className="flex">
                             <Button color="primary" size="sm" radius="md" className="p-2 mr-2" startContent={<FiPlus className="text-white text-lg" />}>Add Computador</Button>
-                            <DropDownTable />
+                            <DropDownTable data={columns} />
                         </div>
                     </div>
                     <div className="flex justify-between items-center px-4">
@@ -68,7 +73,7 @@ export default async function HostPage() {
                         </label>
                     </div>
                     <div className="px-3">
-                        <TableMain />
+                        <TableMain data={host?.data.hosts} collumns={columns} />
                     </div>
                 </div>
             </div>

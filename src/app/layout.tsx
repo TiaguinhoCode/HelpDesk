@@ -7,21 +7,21 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // Biblioteca
 import NextTopLoader from "nextjs-toploader";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+import Recoil from "@/components/recoil";
+
+export default function RootLayout({ children, }: { children: React.ReactNode }) {
 
   return (
     <html lang="pt-br">
       <body>
         <NextAuthSessionProvider>
-          <NextTopLoader />
-          <ToastContainer autoClose={3000} />
-          {children}
+          <Recoil>
+            <NextTopLoader />
+            <ToastContainer autoClose={3000} />
+            {children}
+          </Recoil>
         </NextAuthSessionProvider>
       </body>
     </html>

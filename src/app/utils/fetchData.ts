@@ -1,14 +1,13 @@
-// Api
 import { api } from "@/services/apiClient";
 
-// React
+export default async function fetchData(path: string) {
 
-export async function fetchData(endpoint: string, setData: (data: any) => void) {
     try {
-        const resp = await api.get(endpoint);
-        return setData(resp.data);
+        const resp = await api.get(path)
+        console.log("Deu certo requisicao: ", resp.data)
+        return resp
     } catch (err) {
-        console.error("Erro ao buscar dados:", err);
-        throw new Error("Erro ao buscar dados");
+        console.log('Erro ao buscar dados:', err);
     }
+
 }
