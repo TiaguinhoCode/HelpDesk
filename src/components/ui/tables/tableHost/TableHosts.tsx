@@ -7,16 +7,17 @@ import { Tooltip } from "@nextui-org/tooltip";
 import { FaRegEye } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { TbTrash } from "react-icons/tb";
+import { useRecoilValue } from "recoil";
 
 // Mascara
 import { truncateString } from "@/app/utils/mask/stringMask";
 
 // React
-import React from "react";
+import React, { useMemo } from "react";
 
 // Recoil
-import { useRecoilValue } from "recoil";
-import { hiddenColumn } from "../dropDown/DropDownTable";
+import { hiddenColumn } from "../../dropDown/DropDownTable";
+import { serchFilter } from "@/atom/searchFilter";
 
 // Tipagem
 type ItemHost = {
@@ -49,18 +50,37 @@ interface TableProps {
     collumns: ItemCollumns[]
 }
 
-export function TableMain({ data, collumns }: TableProps) {
+export function TableHosts({ data, collumns }: TableProps) {
     const hiddenColumns = useRecoilValue(hiddenColumn)
+    const searchFilter = useRecoilValue(serchFilter)
 
-    return (
+    const listHosts = useMemo(() => {
+        return data.filter(hosts => {
+            const query = searchFilter.toLowerCase();
+            return (
+                hosts.host.toLowerCase().includes(query) ||
+                hosts.processor.toLowerCase().includes(query) ||
+                hosts.ram_memory.toLowerCase().includes(query) ||
+                hosts.storage.toLowerCase().includes(query) ||
+                hosts.system.toLowerCase().includes(query) ||
+                hosts.switch.toLowerCase().includes(query) ||
+                hosts.user.name.toLowerCase().includes(query) ||
+                hosts.user.email.toLowerCase().includes(query) ||
+                hosts.user.department.sector.toLowerCase().includes(query)
+            );
+        });
+    }, [searchFilter]);
+
+
+    return (    
         <div className="flex flex-col gap-3">
-            <Table classNames={{ th: "bg-[#2563eb] text-white" }} aria-label="Example empty table">
+            <Table isStriped  classNames={{ th: "bg-[#2563eb] text-white" }} aria-label="Example empty table">
                 <TableHeader>
                     {collumns.filter(column => hiddenColumns.includes(column.uid)).map((column) =>
                         <TableColumn key={column.uid}>{column.name}</TableColumn>
                     )}
                 </TableHeader>
-                <TableBody items={data}>
+                <TableBody items={listHosts}>
                     {(item) => (
                         <TableRow key={item.id}>
                             {collumns.filter(column => hiddenColumns.includes(column.uid)).map((column) => (
@@ -104,9 +124,6 @@ const renderCell = (item: ItemHost, columnKey: string) => {
             return item.sdd ? 'sim' : 'não';
         case "armazenamento":
             return item.storage;
-
-        case "switch":
-            return item.switch;
         case "acoes":
             return (
                 <div className="relative flex items-center gap-2">
@@ -127,6 +144,9 @@ const renderCell = (item: ItemHost, columnKey: string) => {
                     </Tooltip>
                 </div>
             );
+        case "switch":
+            return item.switch;
+
         default:
             return null;
     }
