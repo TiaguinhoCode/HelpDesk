@@ -2,28 +2,37 @@
 
 // Bilioteca
 import { Button } from "@nextui-org/button";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/modal";
+import { Modal, ModalContent, ModalHeader } from "@nextui-org/modal";
 import { useDisclosure } from "@nextui-org/modal";
-import { useState } from "react";
 import { FiPlus } from "react-icons/fi";
-import { InputForm } from "../ui/input";
 
-export function ModalForm() {
-    const [error, setError] = useState(false)
+// React
+import { ReactNode } from "react";
+
+// Componentes 
+
+// Tipagem
+type ButtonElementType = typeof Button
+
+type ModalFormProp = React.ComponentProps<ButtonElementType> & {
+    children: ReactNode;
+    descriptionBtn: string
+    descriptionHeader: string
+}
+
+export function ModalForm({ children, descriptionBtn, descriptionHeader, ...rest }: ModalFormProp) {
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
     return (
         <>
-            <Button onPress={onOpen} color="primary" size="sm" radius="md" className="p-2 mr-2" startContent={<FiPlus className="text-white text-lg" />}>Add Computador</Button>
+            <Button onPress={onOpen} color="primary" size="sm" radius="md" className="p-2 mr-2" {...rest} /*startContent={<FiPlus className="text-white text-lg" />}*/ >{descriptionBtn}</Button>
             <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
                 <ModalContent>
                     {(onclose) => (
                         <>
-                            <form>
-                                <ModalHeader className="flex flex-col gap-1">Adicionar Computador</ModalHeader>
-                                <InputForm error={error} radius="lg" type="email" color={error ? 'danger' : 'default'} variant="flat" label="Nome Host*" size='sm' /*value={email} onChange={(e) => setEmail(e.target.value)}*/ />
-                            </form>
+                            <ModalHeader className="flex flex-col gap-1">{descriptionHeader}</ModalHeader>
+                            {children}
                         </>
                     )}
                 </ModalContent>

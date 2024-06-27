@@ -5,6 +5,8 @@ import { DropDownTable } from "@/components/ui/dropDown/DropDownTable";
 import { TableHosts } from "@/components/ui/tables/tableHost/TableHosts";
 import { ManagementPanel } from "@/components/managementPanel";
 import { ModalForm } from "@/components/modal";
+import CreateHost from "@/components/forms/host/CreateHost";
+import { FiPlus } from "react-icons/fi";
 
 // Biblioteca
 
@@ -41,7 +43,9 @@ export default async function HostPage() {
                 <HeaderBar user={session} />
                 <div className="flex flex-col gap-4">
                     <ManagementPanel description={`Total ${host?.data.hosts.length} computadores`}>
-                        <ModalForm />
+                        <ModalForm descriptionBtn="Adicionar Computador" descriptionHeader="Adicionar novo computador" startContent={<FiPlus className="text-white text-lg" />}>
+                            <CreateHost/>
+                        </ModalForm>
                         <DropDownTable data={columns} />
                     </ManagementPanel>
                     <div className="px-3">
