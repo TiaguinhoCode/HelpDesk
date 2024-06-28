@@ -32,7 +32,7 @@ export function BtnLogout() {
     }
 
     return (
-        <Button onClick={logout} size="md" className='w-full flex items-center text-white cursor-pointer mt-5 font-bold'>
+        <Button onClick={logout} size="md" className='w-full flex items-center text-white cursor-pointer font-bold'>
             Sair
         </Button>
     )

@@ -35,6 +35,7 @@ export default async function HostPage() {
 
     const sector = await fetchData('/departments')
     const host = await fetchData('/host')
+    const user = await fetchData('/users')
 
     return (
         <>
@@ -44,7 +45,7 @@ export default async function HostPage() {
                 <div className="flex flex-col gap-4">
                     <ManagementPanel description={`Total ${host?.data.hosts.length} computadores`}>
                         <ModalForm descriptionBtn="Adicionar Computador" descriptionHeader="Adicionar novo computador" startContent={<FiPlus className="text-white text-lg" />}>
-                            <CreateHost/>
+                            <CreateHost users={user?.data.users} />
                         </ModalForm>
                         <DropDownTable data={columns} />
                     </ManagementPanel>

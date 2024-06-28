@@ -4,7 +4,6 @@
 import { Button } from "@nextui-org/button";
 import { Modal, ModalContent, ModalHeader } from "@nextui-org/modal";
 import { useDisclosure } from "@nextui-org/modal";
-import { FiPlus } from "react-icons/fi";
 
 // React
 import { ReactNode } from "react";
@@ -26,7 +25,7 @@ export function ModalForm({ children, descriptionBtn, descriptionHeader, ...rest
 
     return (
         <>
-            <Button onPress={onOpen} color="primary" size="sm" radius="md" className="p-2 mr-2" {...rest} /*startContent={<FiPlus className="text-white text-lg" />}*/ >{descriptionBtn}</Button>
+            <Button onPress={onOpen} color="primary" size="sm" radius="md" className="p-2 mr-2" {...rest}>{descriptionBtn}</Button>
             <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
                 <ModalContent>
                     {(onclose) => (
