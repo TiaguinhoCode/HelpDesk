@@ -119,7 +119,7 @@ export function MainTableHost({ data, token, children }: TableProps) {
     )
 }
 
-const renderCell = (item: ItemHost, columnKey: string) => {
+const renderCell = (item: ItemHost, columnKey: string, onOpen: () => void) => {
     switch (columnKey) {
         case "user":
             return (
@@ -161,7 +161,7 @@ const renderCell = (item: ItemHost, columnKey: string) => {
                         </span>
                     </Tooltip>
                     <Tooltip color="danger" content="Excluir máquina">
-                        <button className="text-lg text-danger cursor-pointer active:opacity-50">
+                        <button onClick={onOpen} className="text-lg text-danger cursor-pointer active:opacity-50">
                             <TbTrash />
                         </button>
                     </Tooltip>
