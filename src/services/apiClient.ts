@@ -1,3 +1,13 @@
-import { setupApiClient } from "./api";
+import axios from "axios";
 
-export const api = setupApiClient()
+export const setupClientAxios = (token: string) => {
+    const instance = axios.create({
+        baseURL: "https://helpdeskapi.vercel.app/",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    return instance;
+};

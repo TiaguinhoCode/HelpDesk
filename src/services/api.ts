@@ -15,7 +15,7 @@ interface sessionType extends Session {
     photo: string
 }
 
-export const setupApiClient = () => {
+export const setupApiServer = () => {
     const instance = axios.create({
         baseURL: "https://helpdeskapi.vercel.app/",
         headers: {

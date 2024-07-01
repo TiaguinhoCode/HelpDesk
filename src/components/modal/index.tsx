@@ -26,7 +26,7 @@ export function ModalForm({ children, descriptionBtn, descriptionHeader, ...rest
     return (
         <>
             <Button onPress={onOpen} color="primary" size="sm" radius="md" className="p-2 mr-2" {...rest}>{descriptionBtn}</Button>
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="center">
                 <ModalContent>
                     {(onclose) => (
                         <>

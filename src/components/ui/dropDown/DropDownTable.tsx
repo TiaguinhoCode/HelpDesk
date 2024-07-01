@@ -12,7 +12,6 @@ import { atom, useRecoilState } from "recoil";
 type ItemCollumns = {
     name: string;
     uid: string
-    hidden: boolean
 }
 
 interface TableProps {

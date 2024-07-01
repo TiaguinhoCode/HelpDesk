@@ -1,13 +1,13 @@
 export const columns = [
-    { name: "Usuario", uid: "user", hidden: false },
-    { name: "Departamento", uid: "departamento", hidden: false },
-    { name: "Host", uid: "host", hidden: false },
-    { name: "Processador", uid: "processador", hidden: false },
-    { name: "Memória Ram", uid: "memoriaram", hidden: false },
-    { name: "HDD", uid: "hdd", hidden: false },
-    { name: "SSD", uid: "ssd", hidden: false },
-    { name: "Armazenamento", uid: "armazenamento", hidden: false },
-    { name: "Switch", uid: "switch", hidden: false },
-    { name: "Ações", uid: "acoes", hidden: false },
-    { name: "Sistema", uid: "system", hidden: true }
+    { name: "Usuario", uid: "user" },
+    { name: "Departamento", uid: "departamento" },
+    { name: "Host", uid: "host" },
+    { name: "Processador", uid: "processador" },
+    { name: "Memória Ram", uid: "memoriaram" },
+    { name: "HDD", uid: "hdd" },
+    { name: "SSD", uid: "ssd" },
+    { name: "Armazenamento", uid: "armazenamento" },
+    { name: "Switch", uid: "switch" },
+    { name: "Ações", uid: "acoes" },
+    { name: "Sistema", uid: "system" }
 ]
