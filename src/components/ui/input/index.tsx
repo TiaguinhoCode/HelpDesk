@@ -1,19 +1,50 @@
-// React 
-import { ComponentProps, InputHTMLAttributes } from "react";
+'use client'
 
 // Biblioteca
-import { Input } from "@nextui-org/input";
+import { Input } from "@nextui-org/react";
+import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+
+// React
+import { ComponentProps, useState } from "react";
 
 // Tipagem
-type InputProps = ComponentProps<typeof Input> & {
-    error?: boolean;
-};
+type InputFormProps = ComponentProps<typeof Input> & {
+    isPassoword: boolean;
+}
 
-export function InputForm({ error, ...rest }: InputProps) {
-    return <Input
-        classNames={
-            {
-                inputWrapper: `dark:group-data-[focus=false] bg-transparent hover:bg-transparent shadow-none dark:hover:bg-transparent group-data-[focus=true]:bg-transparent border ${error ? 'border-red-400' : 'border-blue-400'}`,
-            }
-        } {...rest} />
+export function InputForm({ isPassoword, ...rest }: InputFormProps) {
+    const [isVisible, setIsVisible] = useState<boolean>(false)
+
+    if (isPassoword) {
+        return (
+            <Input
+                type={isVisible ? 'text' : 'password'}
+                label="Senha:"
+                placeholder="Digite sua senha"
+                endContent={
+                    <button className="focus:outline-none" type="button" onClick={() => setIsVisible(!isVisible)}>
+                        {isVisible ? (
+                            <IoEyeOutline className="text-2xl text-default-400 pointer-events-none" />
+                        ) : (
+                            <IoEyeOffOutline className="text-2xl text-default-400 pointer-events-none" />
+                        )}
+                    </button>
+                }
+                size="md"
+                {...rest}
+                labelPlacement="outside"
+                classNames={{ inputWrapper: "bg-transparent data-[hover=true]:bg-transparent group-data-[focus=true]:bg-transparent border border-gray-300" }}
+            />
+        )
+    } else {
+        return (
+            <Input
+                size="md"
+                {...rest}
+                labelPlacement="outside"
+                classNames={{ inputWrapper: "bg-transparent data-[hover=true]:bg-transparent group-data-[focus=true]:bg-transparent border border-gray-300" }}
+            />
+        )
+    }
+
 }

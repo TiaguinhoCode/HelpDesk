@@ -1,166 +1,72 @@
-"use client";
-
-// React
-import { SyntheticEvent, useState } from "react"
-
-// Biblioteca
-import { ModalBody, ModalFooter } from "@nextui-org/modal"
-import { toast } from "react-toastify";
+'use client'
 
 // Componentes
-import { InputForm } from "@/components/ui/input"
-import { BtnLoading } from "@/components/ui/button"
+import { InputForm } from "@/components/ui/input";
+import { Options } from "@/components/ui/select";
+import { Btn } from "@/components/ui/button";
 
+// Biblioteca
+import { toast } from "react-toastify";
+
+// React
+import { useState } from "react";
+
+// Dados
+import { options } from "@/data/boolean";
+import { getData } from "@/services/client/FetchApi";
 
 // Utils
-import { Select, SelectItem } from "@nextui-org/select";
-import { setupClientAxios } from "@/services/apiClient";
-import { useRouter } from "next/navigation";
-
+import { createHost } from "@/utils/functions/formCreateHost";
 
 // Tipagem
-type ItemsUsers = {
-    id: string;
-    name: string;
-}
+import { User } from "@/types/user";
 
-interface CreateHost {
-    users: ItemsUsers[]
-    token: string
-}
+export function CreateHost() {
+    const [users, setUsers] = useState<User[]>([]); // Espera um array de User
+    const [isInvalid, setIsInvalid] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>()
 
-export default function CreateHost({ users, token }: CreateHost) {
-    const [hostName, setHostName] = useState<string>('')
-    const [processor, setProcessor] = useState<string>('')
-    const [memoryRam, setMemoryRam] = useState<string>('')
-    const [hdd, setHdd] = useState<string | null>(null)
-    const [ssd, setSdd] = useState<string | null>(null)
-    const [storage, setStorage] = useState<string>('')
-    const [system, setSystem] = useState<string>('')
-    const [switchNetwork, setSwitchNetwork] = useState<string>('')
-    const [user, setUser] = useState<string | null>(null)
-    const [error, setError] = useState(false)
-    const [loading, setLoading] = useState(false)
+    getData<User>(setUsers, "/users", "users");
 
-    const api = setupClientAxios(token)
-    const router = useRouter();
-
-    async function handleCreateHost(e: SyntheticEvent) {
-        e.preventDefault()
-
-        setLoading(true)
-
-        if (!hostName || !processor || !memoryRam || !hdd || !ssd || !storage || !system || !switchNetwork || !user) {
-            toast.error('Preenchar todos os campos!')
-            setError(true)
-            setLoading(false)
-            return
+    async function handleCreateHost(formData: FormData) {
+        const response = await createHost(formData);
+        setLoading(response.loading);
+        if (response?.error === true) {
+            toast.error(response.message);
+            setIsInvalid(response.error);
+            setLoading(response.loading)
+        } else {
+            toast.success(response?.message);
+            setIsInvalid(response?.error);
+            setLoading(response.loading)
         }
-
-        const sddBoolean = ssd === 'true' ? true : false
-        const hddBoolean = hdd === 'true' ? true : false
-
-        let data = {
-            host: hostName,
-            processor: processor,
-            ram_memory: memoryRam,
-            hdd: hddBoolean,
-            sdd: sddBoolean,
-            storage: storage,
-            system: system,
-            switchRede: switchNetwork,
-            user_id: user
-        }
-
-        try {
-            await api.post('/create/host', data)
-            setHostName('')
-            setProcessor('')
-            setMemoryRam('')
-            setHdd(null)
-            setSdd(null)
-            setStorage('')
-            setSystem('')
-            setSwitchNetwork('')
-            setUser(null)
-            toast.success('Host criado com sucesso!')
-            router.refresh();
-        } catch (error) {
-            toast.error('Erro ao criar host.')
-            console.log("Error: ", error)
-        } finally {
-            setLoading(false)
-        }
+        setLoading(response.loading)
+        console.log('Carregando: ', loading);
     }
 
+    
     return (
-        <form onSubmit={handleCreateHost}>
-            <ModalBody className="overflow-auto h-[340px]">
-                <InputForm error={error} radius="lg" type="text" color={error ? 'danger' : 'default'} variant="flat" label="Host Name*" size='sm' value={hostName} onChange={(e) => setHostName(e.target.value)} />
-                <InputForm error={error} radius="lg" type="text" color={error ? 'danger' : 'default'} variant="flat" label="Processador*" size='sm' value={processor} onChange={(e) => setProcessor(e.target.value)} />
-                <InputForm error={error} radius="lg" type="text" color={error ? 'danger' : 'default'} variant="flat" label="Memória Ram*" size='sm' value={memoryRam} onChange={(e) => setMemoryRam(e.target.value)} />
-                <div className="w-full flex">
+        <>
+            <form action={handleCreateHost}>
+                <InputForm isInvalid={isInvalid} type="text" name="machineName" className="pb-2" label="Nome do computador: " isPassoword={false} placeholder="EMP-SETOR-001" />
+                <InputForm isInvalid={isInvalid} type="text" name="processor" className="pb-2 py-2" label="Nome do processador: " isPassoword={false} placeholder="Nome do processor Colock" />
+                <InputForm isInvalid={isInvalid} type="text" name="ramMemory" className="py-2" label="Memória  ram: " isPassoword={false} placeholder="16GB" />
+                <div className="w-full py-1 flex space-x-2">
                     <div className="w-1/2">
-                        <Select
-                            label="Possui Hdd ?"
-                            color={error ? 'danger' : 'default'}
-                            size='sm'
-                            radius="lg"
-                            value={hdd || ''}
-                            onChange={(e) => setHdd(e.target.value)}
-                            className="w-full pr-2"
-                            classNames={{ trigger: `bg-transparent data-[hover=true]:bg-transparent group-data-[focus=true]:bg-transparent border ${error ? 'border-red-400' : 'border-blue-400'}` }}
-                        >
-                            <SelectItem key="true">
-                                Sim
-                            </SelectItem>
-                            <SelectItem key="false">
-                                Não
-                            </SelectItem>
-                        </Select>
+                        <Options isInvalid={isInvalid} name="hdd" data={options} dataKey="value" description="Tem HD?" />
                     </div>
                     <div className="w-1/2">
-                        <Select
-                            label="Possui Sdd ?"
-                            radius="lg"
-                            color={error ? 'danger' : 'default'}
-                            size='sm'
-                            value={ssd || ''}
-                            onChange={(e) => setSdd(e.target.value)}
-                            className="w-full"
-                            classNames={{ trigger: `bg-transparent data-[hover=true]:bg-transparent group-data-[focus=true]:bg-transparent border ${error ? 'border-red-400' : 'border-blue-400'}` }}
-                        >
-                            <SelectItem key="true">
-                                Sim
-                            </SelectItem>
-                            <SelectItem key="false">
-                                Não
-                            </SelectItem>
-                        </Select>
+                        <Options isInvalid={isInvalid} name="ssd" data={options} dataKey="value" description="Tem SSD?" />
                     </div>
                 </div>
-                <InputForm error={error} radius="lg" type="text" color={error ? 'danger' : 'default'} variant="flat" label="Armazenamento*" size='sm' value={storage} onChange={(e) => setStorage(e.target.value)} />
-                <InputForm error={error} radius="lg" type="text" color={error ? 'danger' : 'default'} variant="flat" label="Sistema Operacional*" size='sm' value={system} onChange={(e) => setSystem(e.target.value)} />
-                <InputForm error={error} radius="lg" type="text" color={error ? 'danger' : 'default'} variant="flat" label="Switch*" size='sm' value={switchNetwork} onChange={(e) => setSwitchNetwork(e.target.value)} />
-                <Select
-                    items={users}
-                    value={user || ''}
-                    color={error ? 'danger' : 'default'}
-                    onChange={(e) => setUser(e.target.value)}
-                    label="Escolha um usuario"
-                    radius="lg"
-                    size='sm'
-                    className="w-full"
-                    classNames={{ trigger: `bg-transparent data-[hover=true]:bg-transparent group-data-[focus=true]:bg-transparent border ${error ? 'border-red-400' : 'border-blue-400'}` }}
-                >
-                    {(user) => <SelectItem key={user.id}>{user.name}</SelectItem>}
-                </Select>
-            </ModalBody>
-            <ModalFooter>
-                <BtnLoading isLoading={loading} type='submit' color={loading ? 'success' : 'primary'} size='md'>
-                    Entrar
-                </BtnLoading>
-            </ModalFooter>
-        </form>
-    )
+                <InputForm isInvalid={isInvalid} type="text" name="storage" className="py-2" label="Armazenamento: " isPassoword={false} placeholder="250GB" />
+                <InputForm isInvalid={isInvalid} type="text" name="system" className="py-2" label="Sistema Operacional: " isPassoword={false} placeholder="Win 10" />
+                <InputForm isInvalid={isInvalid} type="text" name="switchNetwork" className="py-2" label="Switch: " isPassoword={false} placeholder="SW-001" />
+                <Options isInvalid={isInvalid} data={users} name="user" dataKey="name" description="Escolha um usuário" />
+                <div className="w-full py-5">
+                    <Btn isLoading={loading} type="submit" className="w-full" description="Adicionar" />
+                </div>
+            </form>
+        </>
+    );
 }
