@@ -1,13 +1,16 @@
-// renderCell.ts
+// Biblioteca
 import { User, Tooltip } from "@nextui-org/react";
 import { FaPencil, FaRegEye } from "react-icons/fa6";
 import { TbTrash } from "react-icons/tb";
+
+// Utils
 import { truncateString } from "@/utils/mask/strinkMask";
+
+// Tipagem
 import { Host } from "@/types/host";
 
-// Defina um tipo para o objeto renderers com uma assinatura de índice
 type Renderers = {
-    [key: string]: (item: Host, openRemove?: (value: boolean) => void, onOpen?: () => void) => React.ReactNode;
+    [key: string]: (item: Host, openRemove?: (value: boolean, id: string) => void, onOpen?: () => void, handleDetail?: (id: string) => void) => React.ReactNode;
 };
 
 const renderers: Renderers = {
@@ -28,7 +31,7 @@ const renderers: Renderers = {
     sdd: (item: Host) => (item.sdd ? 'sim' : 'não'),
     armazenamento: (item: Host) => item.storage,
     switch: (item: Host) => item.switch,
-    acoes: (item: Host, openRemove?: (value: boolean) => void, onOpen?: () => void) => (
+    acoes: (item: Host, openRemove?: (value: boolean, id: string) => void, onOpen?: () => void, handleDetail?: (id: string) => void) => (
         <div className="relative flex items-center gap-2">
             <Tooltip content="Detalhe">
                 <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
@@ -42,7 +45,10 @@ const renderers: Renderers = {
             </Tooltip>
             <Tooltip color="danger" content="Excluir máquina">
                 <button
-                    onClick={() => { openRemove && openRemove(true); onOpen && onOpen(); }}
+                    onClick={() => { 
+                        openRemove && openRemove(true, item.id.toString()); 
+                        onOpen && onOpen(); 
+                    }}
                     className="text-lg text-danger cursor-pointer active:opacity-50"
                 >
                     <TbTrash />
@@ -52,10 +58,17 @@ const renderers: Renderers = {
     ),
 };
 
-export const renderCell = (item: Host, columnKey: string, openRemove?: (value: boolean) => void, onOpen?: () => void) => {
+export const renderCell = (
+    item: Host,
+    columnKey: string,
+    openRemove?: (value: boolean, id: string) => void,
+    onOpen?: () => void,
+    handleDetail?: (id: string) => void
+) => {
     const renderFunction = renderers[columnKey];
+
     if (renderFunction) {
-        return renderFunction(item, openRemove, onOpen);
+        return renderFunction(item, openRemove, onOpen, handleDetail );
     }
     return null; // ou algum fallback padrão
 };

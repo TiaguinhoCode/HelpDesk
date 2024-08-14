@@ -2,6 +2,7 @@
 
 // Next Framework - Servidor
 import { useRouter, useSearchParams } from "next/navigation"
+import { useSession } from "next-auth/react"
 
 // Dados
 import { columns } from "@/data/collumns/Host"
@@ -18,11 +19,10 @@ import { WarningRemove } from "../../warnings/warningRemove"
 import { useMemo, useState } from "react"
 
 // Biblioteca
-import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from '@nextui-org/react';
-import { useSession } from "next-auth/react"
 
 // Tipagem
 import { Host } from "@/types/host"
+import { useDisclosure } from "@nextui-org/react"
 interface ContainerTableProps<T extends Host> {
     data: T[];
     filterFunction: (props: { data: T[]; search: string }) => T[];
@@ -38,11 +38,13 @@ export function ContainerTable<T extends Host>({ data, filterFunction, url, data
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const router = useRouter()
-    // const { data: session } = useSession();
+    const { data: session } = useSession();
 
-    // const searchTable = useMemo(() => filterFunction({ data: tableData, search: searchParams }), [searchParams, tableData, filterFunction]);
+    const searchTable = useMemo(() => filterFunction({ data: tableData, search: searchParams }), [searchParams, tableData, filterFunction]);
 
-    const handleDetail = (id: string) => {
+    const handleRemove = (value: boolean, id: string) => {
+        setRemove(value)
+
         const params = new URLSearchParams(window.location.search);
         params.set("id", id);
 
@@ -51,28 +53,28 @@ export function ContainerTable<T extends Host>({ data, filterFunction, url, data
     };
 
     async function fetchData() {
-        //     setLoading(true);
+            setLoading(true);
 
-        //     try {
-        //         const response = await fetch(`https://helpdeskapi.vercel.app${url}`, {
-        //             method: "GET",
-        //             headers: {
-        //                 Authorization: `Bearer ${session?.user.token}`,
-        //             }
-        //         });
-        //         const result = await response.json();
+            try {
+                const response = await fetch(`https://helpdeskapi.vercel.app${url}`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${session?.user.token}`,
+                    }
+                });
+                const result = await response.json();
 
-        //         if (result[dataKey]) {
-        //             setTableData(result[dataKey]);
-        //         } else {
-        //             console.error("Estrutura de dados inesperada:", result);
-        //             setTableData([]); // ou qualquer fallback apropriado
-        //         }
-        //     } catch (err) {
-        //         console.error("Erro ao buscar dados:", err);
-        //     } finally {
-        //         setLoading(false);
-        //     }
+                if (result[dataKey]) {
+                    setTableData(result[dataKey]);
+                } else {
+                    console.error("Estrutura de dados inesperada:", result);
+                    setTableData([]); // ou qualquer fallback apropriado
+                }
+            } catch (err) {
+                console.error("Erro ao buscar dados:", err);
+            } finally {
+                setLoading(false);
+            }
 
     }
 
@@ -83,7 +85,7 @@ export function ContainerTable<T extends Host>({ data, filterFunction, url, data
             <Modal children={remove ? <WarningRemove /> : <CreateHost refresh={fetchData} />} isOpen={isOpen} onClose={onClose} footer={remove ? true : false} title={remove ? "Excluir Host" : "Adicionar Host"} position={remove ? "auto" : "top"} actionDescription="Excluir" />
             <TableToolBar onOpen={onOpen} data={tableData} searchParams={searchParams} setSearchParams={setSearchParams} handleRefresh={fetchData} disbleRemove={setRemove} />
             <div className="w-full overflow-hidden max-h-[380px] min-h-[350px] flex rounded-xl p-3 bg-white">
-                <DataGrid columns={columns} data={tableData} renderCell={renderCell} loading={loading} openRemove={setRemove} onOpen={onOpen} />
+                <DataGrid columns={columns} data={tableData} renderCell={renderCell} loading={loading} openRemove={handleRemove} onOpen={onOpen} />
             </div>
         </>
     )

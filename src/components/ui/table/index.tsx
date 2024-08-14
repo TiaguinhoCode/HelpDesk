@@ -8,13 +8,14 @@ import { Loading } from "../loading";
 interface DataGridProps<T> {
     columns: { name: string, uid: string }[];
     data: T[];
-    renderCell: (item: T, columnUid: string, openRemove?: (value: boolean) => void, onOpen?: () => void) => React.ReactNode;
+    renderCell: (item: T, columnUid: string, openRemove?: (value: boolean, id: string) => void, onOpen?: () => void) => React.ReactNode;
     loading: boolean;
-    openRemove?: (value: boolean) => void;
+    openRemove?: (value: boolean, id: string) => void; 
     onOpen?: () => void;
 }
 
 export function DataGrid<T>({ columns, data, renderCell, loading, openRemove, onOpen }: DataGridProps<T>) {
+    
     if (loading) {
         return <Loading />;
     }
