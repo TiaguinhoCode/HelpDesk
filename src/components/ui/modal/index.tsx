@@ -6,6 +6,8 @@ import { ReactNode } from "react";
 
 // Tipagem
 interface ModalProps {
+    title: string;
+    position?: "center" | "auto" | "top" | "top-center" | "bottom" | "bottom-center";
     isOpen: boolean;
     onClose: () => void;
     children: ReactNode;
@@ -13,12 +15,12 @@ interface ModalProps {
     footer: boolean;
 }
 
-export function Modal({ isOpen, onClose, children, actionDescription, footer }: ModalProps) {
+export function Modal({ isOpen, onClose, children, actionDescription, footer, title, position }: ModalProps) {
     return (
-        <NextUIModal scrollBehavior="inside" isOpen={isOpen} onOpenChange={onClose}>
+        <NextUIModal placement={position} scrollBehavior="inside" isOpen={isOpen} onOpenChange={onClose}>
             <ModalContent>
                 <ModalHeader className="flex flex-col gap-1">
-                    Adicionar Máquinas
+                    {title}
                 </ModalHeader>
                 <ModalBody>
                     {children}

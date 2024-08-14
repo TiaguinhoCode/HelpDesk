@@ -1,5 +1,8 @@
 'use client'
 
+// Next Framework - Servidor
+import { useRouter, useSearchParams } from "next/navigation"
+
 // Dados
 import { columns } from "@/data/collumns/Host"
 
@@ -9,34 +12,70 @@ import { renderCell } from "@/components/cell/host"
 import { TableToolBar } from "../tableToolbar"
 import { Modal } from "../../modal"
 import { CreateHost } from "@/components/forms/host/CreateHost"
+import { WarningRemove } from "../../warnings/warningRemove"
 
 // React
 import { useMemo, useState } from "react"
 
 // Biblioteca
-import { useDisclosure } from "@nextui-org/react"
+import { useDisclosure } from '@nextui-org/react';
+import { useSession } from "next-auth/react"
 
 // Tipagem
 import { Host } from "@/types/host"
 interface ContainerTableProps<T extends Host> {
     data: T[];
     filterFunction: (props: { data: T[]; search: string }) => T[];
+    url: string;
+    dataKey: string;
 }
 
-export function ContainerTable<T extends Host>({ data, filterFunction }: ContainerTableProps<T>) {
+export function ContainerTable<T extends Host>({ data, filterFunction, url, dataKey }: ContainerTableProps<T>) {
     const [tableData, setTableData] = useState(data || [])
-    const [searchParams, setSearchParams] = useState<string>('')
+    const [searchParams, setSearchParams] = useState<string>('');
+    const [remove, setRemove] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
 
     const { isOpen, onOpen, onClose } = useDisclosure();
-
+    const { data: session } = useSession();
+    const urlParams = useSearchParams();
+    const router = useRouter();
+    
     const searchTable = useMemo(() => filterFunction({ data: tableData, search: searchParams }), [searchParams, tableData, filterFunction]);
 
+    async function fetchData() {
+        setLoading(true);
+
+        try {
+            const response = await fetch(`https://helpdeskapi.vercel.app${url}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${session?.user.token}`,
+                }
+            });
+            const result = await response.json();
+
+            if (result[dataKey]) {
+                setTableData(result[dataKey]);
+            } else {
+                console.error("Estrutura de dados inesperada:", result);
+                setTableData([]); // ou qualquer fallback apropriado
+            }
+        } catch (err) {
+            console.error("Erro ao buscar dados:", err);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+
+    
     return (
         <>
-            <Modal children={<CreateHost />} isOpen={isOpen} onClose={onClose} footer={false} />
-            <TableToolBar onOpen={onOpen} data={tableData} searchParams={searchParams} setSearchParams={setSearchParams} />
+            <Modal children={remove ? <WarningRemove /> : <CreateHost refresh={fetchData} />} isOpen={isOpen} onClose={onClose} footer={remove ? true : false} title={remove ? "Excluir Host" : "Adicionar Host"} position={remove ? "auto" : "top"} actionDescription="Excluir"/>
+            <TableToolBar onOpen={onOpen} data={tableData} searchParams={searchParams} setSearchParams={setSearchParams} handleRefresh={fetchData} disbleRemove={setRemove} />
             <div className="w-full overflow-hidden max-h-[380px] min-h-[350px] flex rounded-xl p-3 bg-white">
-                <DataGrid columns={columns} data={searchTable} renderCell={renderCell} />
+                <DataGrid columns={columns} data={searchTable} renderCell={renderCell} loading={loading} openRemove={setRemove} onOpen={onOpen} />
             </div>
         </>
     )

@@ -5,13 +5,14 @@ import { Select, SelectItem } from "@nextui-org/react";
 interface OptionsProps<T> {
     data: T[];
     dataKey: keyof T;
-    description: string;
+    description?: string;
     placeholder?: string;
-    name: string;
     isInvalid: boolean;
+    setValue: (value: string) => void;
+    value: string;
 }
 
-export function Options<T>({ data, dataKey, description, name, placeholder, isInvalid }: OptionsProps<T>) {
+export function Options<T>({ data, dataKey, description, placeholder, isInvalid, setValue, value }: OptionsProps<T>) {
     return (
         <Select
             label={description}
@@ -21,7 +22,8 @@ export function Options<T>({ data, dataKey, description, name, placeholder, isIn
             labelPlacement="outside"
             isInvalid={isInvalid}
             classNames={{ trigger: "bg-transparent data-[hover=true]:bg-transparent group-data-[focus=true]:bg-transparent border border-gray-300" }}
-            name={name}
+            selectedKeys={[value]} 
+            onChange={(e) => setValue(e.target.value)}
         >
             {data.map((item) => (
                 <SelectItem key={(item as any).id}>

@@ -21,7 +21,7 @@ export default async function HostPage() {
             <Submenu users={user.users} departments={department.departments} />
 
             <div className="w-full max-w-[59em] flex flex-col space-y-4">
-                <ContainerTable data={host.hosts} filterFunction={searchFilter}/>
+                <ContainerTable data={host.hosts} filterFunction={searchFilter} url="/host" dataKey="hosts" />
             </div>
         </>
     )
