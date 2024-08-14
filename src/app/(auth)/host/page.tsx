@@ -17,12 +17,11 @@ export default async function HostPage() {
     const host = await getData('/host', 'GET', 0)
 
     return (
-        <>
+        <div className="w-full h-screen flex space-x-4">
             <Submenu users={user.users} departments={department.departments} />
-
-            <div className="w-full max-w-[59em] flex flex-col space-y-4">
+            <div className="w-full">
                 <ContainerTable data={host.hosts} filterFunction={searchFilter} url="/host" dataKey="hosts" />
             </div>
-        </>
+        </div>
     )
 }

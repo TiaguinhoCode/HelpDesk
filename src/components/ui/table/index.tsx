@@ -20,7 +20,12 @@ export function DataGrid<T>({ columns, data, renderCell, loading, openRemove, on
     }
 
     return (
-        <Table isHeaderSticky isStriped classNames={{ base: "overflow-auto", table: "", th: 'bg-blue-500 font-bold text-white', td: 'text-xs' }} aria-label="Example empty table">
+        <Table
+            isHeaderSticky
+            isStriped
+            classNames={{ base: "overflow-auto", table: "", th: 'bg-blue-500 font-bold text-white', td: 'text-xs' }}
+            aria-label="Example empty table"
+        >
             <TableHeader columns={columns}>
                 {(column) => <TableColumn key={column.uid}>{column.name}</TableColumn>}
             </TableHeader>
