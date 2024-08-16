@@ -18,7 +18,9 @@ import { WarningRemove } from "../../warnings/warningRemove"
 // React
 import { useMemo, useState } from "react"
 
-// Biblioteca
+// Utils
+import { fetchData } from "@/utils/refresh/handleRefresh"
+import { removeData } from "@/utils/removeData/handleRemove"
 
 // Tipagem
 import { Host } from "@/types/host"
@@ -37,55 +39,18 @@ export function ContainerTable<T extends Host>({ data, filterFunction, url, data
     const [loading, setLoading] = useState<boolean>(false)
 
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const router = useRouter()
     const { data: session } = useSession();
 
     const searchTable = useMemo(() => filterFunction({ data: tableData, search: searchParams }), [searchParams, tableData, filterFunction]);
-
-    const handleRemove = (value: boolean, id: string) => {
-        setRemove(value)
-
-        const params = new URLSearchParams(window.location.search);
-        params.set("id", id);
-
-        // Atualiza a URL, permanecendo na mesma página
-        router.replace(`/host?${params.toString()}`);
-    };
-
-    async function fetchData() {
-            setLoading(true);
-
-            try {
-                const response = await fetch(`https://helpdeskapi.vercel.app${url}`, {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${session?.user.token}`,
-                    }
-                });
-                const result = await response.json();
-
-                if (result[dataKey]) {
-                    setTableData(result[dataKey]);
-                } else {
-                    console.error("Estrutura de dados inesperada:", result);
-                    setTableData([]); // ou qualquer fallback apropriado
-                }
-            } catch (err) {
-                console.error("Erro ao buscar dados:", err);
-            } finally {
-                setLoading(false);
-            }
-
-    }
-
-
+    const refresh = fetchData({ url, token: session?.user.token, dataKey, setData: setTableData, setLoading })
+    const { openTakeDownNotice, handleDeleteData } = removeData({ setRemove, onClose, refresh, token: session?.user.token, url: '/delete/host?id=' })
 
     return (
         <>
-            <Modal children={remove ? <WarningRemove /> : <CreateHost refresh={fetchData} />} isOpen={isOpen} onClose={onClose} footer={remove ? true : false} title={remove ? "Excluir Host" : "Adicionar Host"} position={remove ? "auto" : "top"} actionDescription="Excluir" />
-            <TableToolBar onOpen={onOpen} data={tableData} searchParams={searchParams} setSearchParams={setSearchParams} handleRefresh={fetchData} disbleRemove={setRemove} />
+            <Modal children={remove ? <WarningRemove /> : <CreateHost refresh={refresh} />} isOpen={isOpen} onClose={onClose} footer={remove ? true : false} title={remove ? "Excluir Host" : "Adicionar Host"} position={remove ? "auto" : "top"} actionDescription="Excluir" handleDeleteData={handleDeleteData}/>
+            <TableToolBar onOpen={onOpen} data={tableData} searchParams={searchParams} setSearchParams={setSearchParams} handleRefresh={refresh} disbleRemove={setRemove} />
             <div className="w-full overflow-hidden max-h-[380px] min-h-[350px] flex rounded-xl p-3 bg-white">
-                <DataGrid columns={columns} data={tableData} renderCell={renderCell} loading={loading} openRemove={handleRemove} onOpen={onOpen} />
+                <DataGrid columns={columns} data={searchTable} renderCell={renderCell} loading={loading} openRemove={openTakeDownNotice} onOpen={onOpen} />
             </div>
         </>
     )

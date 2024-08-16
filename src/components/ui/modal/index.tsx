@@ -13,9 +13,10 @@ interface ModalProps {
     children: ReactNode;
     actionDescription?: string;
     footer: boolean;
+    handleDeleteData?: () => void
 }
 
-export function Modal({ isOpen, onClose, children, actionDescription, footer, title, position }: ModalProps) {
+export function Modal({ isOpen, onClose, children, actionDescription, footer, title, position, handleDeleteData }: ModalProps) {
     return (
         <NextUIModal placement={position} scrollBehavior="inside" isOpen={isOpen} onOpenChange={onClose}>
             <ModalContent>
@@ -30,7 +31,7 @@ export function Modal({ isOpen, onClose, children, actionDescription, footer, ti
                         <Button color="danger" variant="light" onPress={onClose}>
                             Fechar
                         </Button>
-                        <Button color="primary" type="submit">
+                        <Button onClick={handleDeleteData} color="primary" type="submit">
                             {actionDescription}
                         </Button>
                     </ModalFooter>
