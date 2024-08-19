@@ -55,7 +55,7 @@ export function CreateHost({ refresh }: { refresh: () => void }) {
             switchRede: switchNetwork,  
             user_id: userId,
         };
-        console.log('Dados: ', data)
+        
         const response = await createHost(data);
 
         if (response?.error === true) {

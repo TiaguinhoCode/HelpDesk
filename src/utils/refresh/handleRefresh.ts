@@ -14,6 +14,7 @@ export function fetchData<T>({
   token,
   url,
 }: FetchDataProps<T>) {
+  console.log("Url: ", url)
   async function handleRefresh() {
     setLoading(true);
 

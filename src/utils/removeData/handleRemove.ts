@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 
 // Tipagem
 interface RemoveDataProps {
-  setRemove: (value: boolean) => void;
+  setModalType: (value: string) => void;
   onClose: () => void;
   refresh: () => void;
   url: string;
@@ -17,7 +17,7 @@ interface RemoveDataProps {
 }
 
 export function removeData({
-  setRemove,
+  setModalType,
   onClose,
   refresh,
   url,
@@ -25,8 +25,8 @@ export function removeData({
 }: RemoveDataProps) {
   const [id, setId] = useState<string>("");
 
-  function openTakeDownNotice(value: boolean, newId: string) {
-    setRemove(value);
+  function openTakeDownNotice(value: string, newId: string) {
+    setModalType(value);
     setId(newId);
   }
 

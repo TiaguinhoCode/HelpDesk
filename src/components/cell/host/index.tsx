@@ -10,7 +10,7 @@ import { truncateString } from "@/utils/mask/strinkMask";
 import { Host } from "@/types/host";
 
 type Renderers = {
-    [key: string]: (item: Host, openRemove?: (value: boolean, id: string) => void, onOpen?: () => void, handleDetail?: (id: string) => void) => React.ReactNode;
+    [key: string]: (item: Host, openRemove?: (value: string, id: string) => void, onOpen?: () => void, handleDetail?: (id: string) => void) => React.ReactNode;
 };
 
 const renderers: Renderers = {
@@ -31,7 +31,7 @@ const renderers: Renderers = {
     sdd: (item: Host) => (item.sdd ? 'sim' : 'não'),
     armazenamento: (item: Host) => item.storage,
     switch: (item: Host) => item.switch,
-    acoes: (item: Host, openRemove?: (value: boolean, id: string) => void, onOpen?: () => void, handleDetail?: (id: string) => void) => (
+    acoes: (item: Host, openRemove?: (value: string, id: string) => void, onOpen?: () => void, handleDetail?: (id: string) => void) => (
         <div className="relative flex items-center gap-2">
             <Tooltip content="Detalhe">
                 <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
@@ -46,7 +46,7 @@ const renderers: Renderers = {
             <Tooltip color="danger" content="Excluir máquina">
                 <button
                     onClick={() => { 
-                        openRemove && openRemove(true, item.id.toString()); 
+                        openRemove && openRemove('removeHost', item.id.toString()); 
                         onOpen && onOpen(); 
                     }}
                     className="text-lg text-danger cursor-pointer active:opacity-50"
@@ -61,7 +61,7 @@ const renderers: Renderers = {
 export const renderCell = (
     item: Host,
     columnKey: string,
-    openRemove?: (value: boolean, id: string) => void,
+    openRemove?: (value: string, id: string) => void,
     onOpen?: () => void,
     handleDetail?: (id: string) => void
 ) => {
