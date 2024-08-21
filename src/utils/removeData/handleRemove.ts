@@ -1,7 +1,6 @@
 "use client";
 
 // Framework - Servidor
-import { useParams, useRouter } from "next/navigation";
 
 // React
 import { useState } from "react";
@@ -12,7 +11,7 @@ interface RemoveDataProps {
   setModalType: (value: string) => void;
   onClose: () => void;
   refresh: () => void;
-  url: string;
+  url: string | undefined;
   token?: string;
 }
 

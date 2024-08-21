@@ -11,13 +11,15 @@ import { FaSync } from "react-icons/fa";
 interface TableToolBarProps<T> {
     data: T[];
     searchParams: string;
+    limit: number;
+    setLimit: (value: number) => void
     setSearchParams: (value: string) => void;
     onOpen: () => void;
     handleRefresh: () => void;
     setModalType: (value: string) => void
 }
 
-export function TableToolBar<T>({ data, searchParams, setSearchParams, onOpen, handleRefresh, setModalType }: TableToolBarProps<T>) {
+export function TableToolBar<T>({ data, searchParams, limit, setLimit, setSearchParams, onOpen, handleRefresh, setModalType }: TableToolBarProps<T>) {
     return (
         <div className="w-full mb-3 rounded-xl p-3 bg-white flex flex-col space-y-4">
             <div className="w-full flex flex-col sm:flex-row sm:justify-between space-y-4 sm:space-y-0">
@@ -40,10 +42,10 @@ export function TableToolBar<T>({ data, searchParams, setSearchParams, onOpen, h
                 <span className="text-default-400 text-small">Total {data.length} Máquinas</span>
                 <label className="flex items-center text-default-400 text-small">
                     Linhas por página:
-                    <select className="bg-transparent outline-none text-default-400 text-small">
-                        <option value="5">5</option>
+                    <select value={limit} onChange={(e) => setLimit(Number(e.target.value))} className="bg-transparent outline-none text-default-400 text-small">
                         <option value="10">10</option>
                         <option value="15">15</option>
+                        <option value="20">20</option>
                     </select>
                 </label>
             </div>

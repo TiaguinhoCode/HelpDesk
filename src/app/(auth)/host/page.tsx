@@ -9,7 +9,6 @@ import { getData } from "@/services/server/FetchApi";
 import { searchFilter } from "@/utils/filter/host/search";
 
 // Tipagem
-import { Host } from "@/types/host";
 
 export default async function HostPage() {
 
@@ -21,7 +20,7 @@ export default async function HostPage() {
         <div className="w-full h-screen flex space-x-4">
             <Submenu users={user.users} departments={department.departments} />
             <div className="w-full">
-                <ContainerTable data={host.hosts} filterFunction={searchFilter} urlGet="/host" dataKey="hosts" />
+                <ContainerTable data={host.hosts} filterFunction={searchFilter} urlGet="/host" dataKey="hosts" urlRemove="/delete/host?id=" urlDetail="detail/host?id="/>
             </div>
         </div>
     )

@@ -24,7 +24,7 @@ import { User } from "@/types/user";
 import { HostData } from "@/types/host";
 
 export function CreateHost({ refresh }: { refresh: () => void }) {
-    const [users, setUsers] = useState<User[]>([]); // Espera um array de User
+    const [users, setUsers] = useState<User[]>([]); 
     const [machineName, setMachineName] = useState<string>('')
     const [processor, setProcessor] = useState<string>('')
     const [ramMemory, setRamMemory] = useState<string>('')

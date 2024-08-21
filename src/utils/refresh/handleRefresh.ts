@@ -1,6 +1,6 @@
 // Tipagem
 interface FetchDataProps<T> {
-  setLoading: (value: boolean) => void;
+  setLoading?: (value: boolean) => void;
   setData: (value: T[]) => void;
   dataKey: string;
   url: string;
@@ -14,9 +14,8 @@ export function fetchData<T>({
   token,
   url,
 }: FetchDataProps<T>) {
-  console.log("Url: ", url)
   async function handleRefresh() {
-    setLoading(true);
+    setLoading && setLoading(true);
 
     try {
       const resp = await fetch(`https://helpdeskapi.vercel.app${url}`, {
@@ -37,7 +36,7 @@ export function fetchData<T>({
     } catch (err) {
       console.error("Erro ao buscar dados:", err);
     } finally {
-      setLoading(false);
+      setLoading && setLoading(false);
     }
   }
 
