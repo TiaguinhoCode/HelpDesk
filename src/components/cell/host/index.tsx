@@ -1,3 +1,5 @@
+'use client'
+
 // Biblioteca
 import { User, Tooltip } from "@nextui-org/react";
 import { FaPencil, FaRegEye } from "react-icons/fa6";
@@ -10,7 +12,7 @@ import { truncateString } from "@/utils/mask/strinkMask";
 import { Host } from "@/types/host";
 
 type Renderers = {
-    [key: string]: (item: Host, openRemove?: (value: string, id: string) => void, onOpen?: () => void, openEdit?: (value: string, id: string) => void) => React.ReactNode;
+    [key: string]: (item: Host) => React.ReactNode;
 };
 
 const renderers: Renderers = {
@@ -31,7 +33,7 @@ const renderers: Renderers = {
     sdd: (item: Host) => (item.sdd ? 'sim' : 'não'),
     armazenamento: (item: Host) => item.storage,
     switch: (item: Host) => item.switch,
-    acoes: (item: Host, openRemove?: (value: string, id: string) => void, onOpen?: () => void, openEdit?: (value: string, id: string) => void) => (
+    acoes: (item: Host) => (
         <div className="relative flex items-center gap-2">
             <Tooltip content="Detalhe">
                 <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
@@ -39,18 +41,12 @@ const renderers: Renderers = {
                 </span>
             </Tooltip>
             <Tooltip content="Editar">
-                <button onClick={() => {openEdit && openEdit('editHost', item.id.toString()); onOpen && onOpen(); }} className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                <button className="text-lg text-default-400 cursor-pointer active:opacity-50">
                     <FaPencil />
                 </button>
             </Tooltip>
             <Tooltip color="danger" content="Excluir máquina">
-                <button
-                    onClick={() => { 
-                        openRemove && openRemove('removeHost', item.id.toString()); 
-                        onOpen && onOpen(); 
-                    }}
-                    className="text-lg text-danger cursor-pointer active:opacity-50"
-                >
+                <button className="text-lg text-danger cursor-pointer active:opacity-50">
                     <TbTrash />
                 </button>
             </Tooltip>
@@ -61,14 +57,11 @@ const renderers: Renderers = {
 export const renderCell = (
     item: Host,
     columnKey: string,
-    openRemove?: (value: string, id: string) => void,
-    onOpen?: () => void,
-    openEdit?: (value: string, id: string) => void,
 ) => {
     const renderFunction = renderers[columnKey];
 
     if (renderFunction) {
-        return renderFunction(item, openRemove, onOpen, openEdit);
+        return renderFunction(item);
     }
     return null; // ou algum fallback padrão
 };

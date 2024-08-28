@@ -1,4 +1,5 @@
 // Componentes
+import { renderCell } from "@/components/cell/host";
 import { Submenu } from "@/components/ui/menu/Submenu/host";
 import { ContainerTable } from "@/components/ui/table/containerTable";
 
@@ -20,7 +21,7 @@ export default async function HostPage() {
         <div className="w-full h-screen flex space-x-4">
             <Submenu users={user.users} departments={department.departments} />
             <div className="w-full">
-                <ContainerTable data={host.hosts} filterFunction={searchFilter} urlGet="/host" dataKey="hosts" urlRemove="/delete/host?id=" urlDetail="detail/host?id="/>
+                <ContainerTable data={host.hosts} filterFunction={searchFilter} urlGet="/host" dataKey="hosts" renderCell={renderCell}/>
             </div>
         </div>
     )

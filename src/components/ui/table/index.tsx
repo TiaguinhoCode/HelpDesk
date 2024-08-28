@@ -9,14 +9,10 @@ interface DataGridProps<T> {
     columns: { name: string, uid: string }[];
     data: T[];
     loading: boolean;
-    onOpen?: () => void;
-    renderCell: (item: T, columnUid: string, openRemove?: (value: string, id: string) => void, onOpen?: () => void, openEdit?: (value: string, id: string) => void) => React.ReactNode;
-    openRemove?: (value: string, id: string) => void;
-    openEdit?: (value: string, id: string) => void,
+    renderCell: (item: T, columnUid: string) => React.ReactNode;
 }
 
-export function DataGrid<T>({ columns, data, loading, onOpen, renderCell, openRemove, openEdit }: DataGridProps<T>) {
-
+export function DataGrid<T>({ columns, data, loading, renderCell }: DataGridProps<T>) {
     if (loading) {
         return <Loading />;
     }
@@ -36,7 +32,7 @@ export function DataGrid<T>({ columns, data, loading, onOpen, renderCell, openRe
                     <TableRow key={(item as any).id}>
                         {columns.map((column) => (
                             <TableCell key={column.uid}>
-                                {renderCell(item, column.uid, openRemove, onOpen, openEdit)}
+                                {renderCell(item, column.uid)}
                             </TableCell>
                         ))}
                     </TableRow>

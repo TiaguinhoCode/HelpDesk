@@ -14,12 +14,10 @@ interface TableToolBarProps<T> {
     limit: number;
     setLimit: (value: number) => void
     setSearchParams: (value: string) => void;
-    onOpen: () => void;
     handleRefresh: () => void;
-    setModalType: (value: string) => void
 }
 
-export function TableToolBar<T>({ data, searchParams, limit, setLimit, setSearchParams, onOpen, handleRefresh, setModalType }: TableToolBarProps<T>) {
+export function TableToolBar<T>({ data, searchParams, limit, setLimit, setSearchParams, handleRefresh }: TableToolBarProps<T>) {
     return (
         <div className="w-full mb-3 rounded-xl p-3 bg-white flex flex-col space-y-4">
             <div className="w-full flex flex-col sm:flex-row sm:justify-between space-y-4 sm:space-y-0">
@@ -33,7 +31,7 @@ export function TableToolBar<T>({ data, searchParams, limit, setLimit, setSearch
                     onClear={() => setSearchParams('')}
                 />
                 <div className="w-full sm:w-auto flex justify-end">
-                    <Btn onClick={() => { onOpen(); setModalType('createHost') }} description="Add Máquinas" endContent={<FaPlus size={15} />} className="ml-3 text-sm" />
+                    <Btn description="Add Máquinas" endContent={<FaPlus size={15} />} className="ml-3 text-sm" />
                     <Btn onClick={handleRefresh} description="Atualizar" endContent={<FaSync size={15} />} className="ml-3 text-sm" />
                 </div>
             </div>

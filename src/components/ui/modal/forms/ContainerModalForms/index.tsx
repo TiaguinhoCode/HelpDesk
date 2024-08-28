@@ -24,11 +24,9 @@ export function FormModalRenderer({ modalType, urlDetail, isOpen, onClose, refre
         if (urlDetail) {
             return await getData(urlDetail, 'GET', 0);
         }
-        return null; // ou outra ação, caso urlDetail seja undefined
+        return null;
     }
-
-console.log("Dados: ", data.host)
-
+console.log("Dados: ", data)
     switch (modalType) {
         case 'createHost':
             content = <Modal children={<CreateHost refresh={refresh} />} isOpen={isOpen} onClose={onClose} footer={false} title="Adicionar Host" position="auto" />;
