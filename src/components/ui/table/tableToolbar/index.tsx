@@ -7,6 +7,9 @@ import { IoSearchOutline } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
 import { FaSync } from "react-icons/fa";
 
+// Next - Framework
+import Link from "next/link";
+
 // Tipagem
 interface TableToolBarProps<T> {
     data: T[];
@@ -31,7 +34,9 @@ export function TableToolBar<T>({ data, searchParams, limit, setLimit, setSearch
                     onClear={() => setSearchParams('')}
                 />
                 <div className="w-full sm:w-auto flex justify-end">
-                    <Btn description="Add Máquinas" endContent={<FaPlus size={15} />} className="ml-3 text-sm" />
+                    <Link href="host/create">
+                        <Btn description="Add Máquinas" endContent={<FaPlus size={15} />} className="ml-3 text-sm" />
+                    </Link>
                     <Btn onClick={handleRefresh} description="Atualizar" endContent={<FaSync size={15} />} className="ml-3 text-sm" />
                 </div>
             </div>

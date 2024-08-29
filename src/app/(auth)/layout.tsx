@@ -23,7 +23,9 @@ export default async function PrivateRouter({ children }: { children: ReactNode 
 
     return (
         <main className="flex w-screen h-screen  bg-[#f6f8fc]">
-            <NextTopLoader />
+            <NextTopLoader
+                color="#292929"
+            />
             <SideNav user={session.user} />
             <div className="w-full flex flex-col">
                 <HeaderNav user={session.user} />
