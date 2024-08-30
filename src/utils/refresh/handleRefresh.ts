@@ -31,7 +31,7 @@ export function fetchData<T>({
         setData(result[dataKey]);
       } else {
         console.error("Estrutura de dados inesperada:", result);
-        setData([]); 
+        // setData([]); 
       }
     } catch (err) {
       console.error("Erro ao buscar dados:", err);
