@@ -11,9 +11,11 @@ import { truncateString } from "@/utils/mask/strinkMask";
 // Tipagem
 import { Host } from "@/types/host";
 
+type RendererFunction = (item: Host, onOpen?: (value: string) => void) => React.ReactNode;
+
 type Renderers = {
-    [key: string]: (item: Host) => React.ReactNode;
-};
+    [key: string]: RendererFunction;
+}
 
 const renderers: Renderers = {
     user: (item: Host) => (
@@ -33,7 +35,7 @@ const renderers: Renderers = {
     sdd: (item: Host) => (item.sdd ? 'sim' : 'não'),
     armazenamento: (item: Host) => item.storage,
     switch: (item: Host) => item.switch,
-    acoes: (item: Host) => (
+    acoes: (item: Host, onOpen?: (value: string) => void) => (
         <div className="relative flex items-center gap-2">
             <Tooltip content="Detalhe">
                 <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
@@ -46,7 +48,7 @@ const renderers: Renderers = {
                 </button>
             </Tooltip>
             <Tooltip color="danger" content="Excluir máquina">
-                <button className="text-lg text-danger cursor-pointer active:opacity-50">
+                <button onClick={() => onOpen && onOpen(item.id)} className="text-lg text-danger cursor-pointer active:opacity-50">
                     <TbTrash />
                 </button>
             </Tooltip>
@@ -57,11 +59,12 @@ const renderers: Renderers = {
 export const renderCell = (
     item: Host,
     columnKey: string,
+    onOpen?: (value: string) => void,
 ) => {
     const renderFunction = renderers[columnKey];
 
     if (renderFunction) {
-        return renderFunction(item);
+        return renderFunction(item, onOpen);
     }
     return null; // ou algum fallback padrão
 };

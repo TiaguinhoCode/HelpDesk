@@ -21,7 +21,7 @@ export default async function HostPage() {
         <div className="w-full h-screen flex space-x-4">
             <Submenu users={user.users} departments={department.departments} />
             <div className="w-full">
-                <ContainerTable data={host.hosts} filterFunction={searchFilter} urlGet="/host" dataKey="hosts" renderCell={renderCell}/>
+                <ContainerTable data={host.hosts} filterFunction={searchFilter} urlGet="/host" dataKey="hosts" renderCell={renderCell} isRemove={true} urlRemove="/delete/host?id="/>
             </div>
         </div>
     )

@@ -9,10 +9,11 @@ interface DataGridProps<T> {
     columns: { name: string, uid: string }[];
     data: T[];
     loading: boolean;
-    renderCell: (item: T, columnUid: string) => React.ReactNode;
+    onOpen?: (value: string) => void;
+    renderCell: (item: T, columnUid: string, onOpen?: (value: string) => void) => React.ReactNode;
 }
 
-export function DataGrid<T>({ columns, data, loading, renderCell }: DataGridProps<T>) {
+export function DataGrid<T>({ columns, data, loading, onOpen, renderCell }: DataGridProps<T>) {
     if (loading) {
         return <Loading />;
     }
@@ -32,7 +33,7 @@ export function DataGrid<T>({ columns, data, loading, renderCell }: DataGridProp
                     <TableRow key={(item as any).id}>
                         {columns.map((column) => (
                             <TableCell key={column.uid}>
-                                {renderCell(item, column.uid)}
+                                {renderCell(item, column.uid, onOpen)} 
                             </TableCell>
                         ))}
                     </TableRow>

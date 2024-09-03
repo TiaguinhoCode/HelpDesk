@@ -9,7 +9,7 @@ import { Avatar, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger 
 import { ActiveLink } from "./ActiveLink";
 
 // Framework - Servidor
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 // Biblioteca
 import { signOut } from "next-auth/react";
@@ -23,6 +23,7 @@ interface SideNavProp {
 
 export function SideNav({ user }: SideNavProp) {
     const router = useRouter()
+    const pathName = usePathname()
 
     async function logout() {
         await signOut({
@@ -42,7 +43,7 @@ export function SideNav({ user }: SideNavProp) {
                 <ActiveLink content="Chamados" href="/ticket">
                     <BsTicketPerforated className="w-6 h-6 stroke-current" />
                 </ActiveLink>
-                <ActiveLink content="Computadores" href="/host">
+                <ActiveLink content="Computadores" href={pathName === "/host/create" ? "/host/create" : "/host"}>
                     <FaComputer className="w-6 h-6 stroke-current" />
                 </ActiveLink>
             </div>

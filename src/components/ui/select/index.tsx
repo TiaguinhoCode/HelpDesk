@@ -4,7 +4,7 @@ import { Select, SelectItem } from "@nextui-org/react";
 // Tipagem
 interface OptionsProps<T> {
     data: T[];
-    dataKey: keyof T;
+    dataKey: string;
     description?: string;
     placeholder?: string;
     isInvalid: boolean;
@@ -25,7 +25,7 @@ export function Options<T>({ data, dataKey, description, placeholder, isInvalid,
             selectedKeys={[value]} 
             onChange={(e) => setValue(e.target.value)}
         >
-            {data.map((item) => (
+            {data && data.map((item) => (
                 <SelectItem key={(item as any).id}>
                     {(item as any)[dataKey]}
                 </SelectItem>

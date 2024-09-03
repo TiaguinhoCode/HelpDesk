@@ -8,15 +8,15 @@ import { toast } from "react-toastify";
 
 // Tipagem
 interface RemoveDataProps {
-  setModalType: (value: string) => void;
   onClose: () => void;
+  onOpen: () => void;
   refresh: () => void;
-  url: string | undefined;
+  url?: string | undefined;
   token?: string;
 }
 
 export function removeData({
-  setModalType,
+  onOpen,
   onClose,
   refresh,
   url,
@@ -24,9 +24,9 @@ export function removeData({
 }: RemoveDataProps) {
   const [id, setId] = useState<string>("");
 
-  function openTakeDownNotice(value: string, newId: string) {
-    setModalType(value);
+  function openTakeDownNotice(newId: string) {
     setId(newId);
+    onOpen();
   }
 
   async function handleDeleteData() {
@@ -45,7 +45,7 @@ export function removeData({
 
       toast.success("Máquina excluída com sucesso");
       onClose();
-      refresh();
+      refresh()
     } catch (err) {
       console.log(`Ocorreu um erro ao excluir os dados: ${err}`);
     }
